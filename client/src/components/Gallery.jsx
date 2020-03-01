@@ -1,6 +1,6 @@
 import React from 'react'
 import auth from '../auth.js'
-import { Pagination, Checkbox } from 'semantic-ui-react'
+import { Pagination, Checkbox, Form, Button } from 'semantic-ui-react'
 import Tile from './Tile.jsx'
 
 class Gallery extends React.Component {
@@ -8,13 +8,29 @@ class Gallery extends React.Component {
   constructor() {
     super()
     this.state = {
-      allImages: [],
       currentImages: [],
-      itemsPerPage: 9,
       activePage: 1,
       totalPages: 1,
-      checked: false
+      checked: false,
+      width: 450,
+      height: 450,
+      viewFilters: false
     }
+  }
+
+  handleChange = (e, { name, value }) => {
+    this.setState({ [name]: value })
+    if(name === 'width') {
+      this.getImages(1, value, this.state.height)
+    } else if (name === "height") {
+      this.getImages(1, this.state.width, value)
+    }
+  }
+
+  toggleFilters() {
+    this.setState({
+      viewFilters: !this.state.viewFilters
+    })
   }
 
   toggle = () => this.setState((prevState) => ({ checked: !prevState.checked }))
@@ -22,35 +38,36 @@ class Gallery extends React.Component {
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ 
       activePage: activePage,
-    }, this.updateImages(activePage))
+    }, this.getImages(activePage))
   }
 
-  getImages() {
-    auth.getImages().then(response => {
+  getImages(page, w, h) {
+    const data = {
+      activePage: page,
+      width: w || this.state.width,
+      height: h || this.state.height
+    }
+    auth.getImages(data).then(response => {
       this.setState({
-        allImages: response,
-        totalPages: Math.ceil(response.length / this.state.itemsPerPage),
-        currentImages: response.slice(0, this.state.itemsPerPage)
+        totalPages: response.pages,
+        currentImages: response.images,
+        activePage: page
       })
     })
   }
 
-  updateImages(page) {
-    var updatedImages = this.state.allImages.slice((page - 1) * this.state.itemsPerPage, ((page - 1) * this.state.itemsPerPage) + this.state.itemsPerPage)
-    this.setState({
-      currentImages: updatedImages
-    })
-  }
-
   componentDidMount() {
-    this.getImages()
+    this.getImages(1)
   }
 
   render() {
+
+    const { width, height, activePage } = this.state
+
     return (
       <div className="gallery">
         <Pagination
-          defaultActivePage={1}
+          activePage={activePage}
           firstItem={null}
           lastItem={null}
           pointing
@@ -58,15 +75,45 @@ class Gallery extends React.Component {
           totalPages={this.state.totalPages}
           onPageChange={this.handlePaginationChange.bind(this)}
         />
+        <div className="options-button">
+          <Button onClick={this.toggleFilters.bind(this)}>{this.state.viewFilters ? "Hide Filters" : "View Filters"}</Button>
+        </div>
+        {this.state.viewFilters
+          ? <div className="options">
+              <Checkbox label={this.state.checked ? "Grayscale On" : "Grayscale Off"} toggle onClick={this.toggle} />
+              <Form className="filtering">
+                <Form.Group inline >
+                  <Form.Input
+                    label={`Max. Width: ${width}`}
+                    min={100}
+                    max={450}
+                    name='width'
+                    onChange={this.handleChange}
+                    step={50}
+                    type='range'
+                    value={width}
+                  />
+                  <Form.Input
+                    label={`Max. Height: ${height}`}
+                    min={100}
+                    max={450}
+                    name='height'
+                    onChange={this.handleChange}
+                    step={50}
+                    type='range'
+                    value={height}
+                  />
+                </Form.Group>
+              </Form>
+            </div>
+          : null
+        }
         <div className="images">
           {this.state.currentImages.map((i, index) => {
             return (
               <Tile key={index} image={this.state.checked ? i + "?grayscale" : i} />
             )
           })}
-        </div>
-        <div>
-          <Checkbox toggle onClick={this.toggle} />
         </div>
       </div>
     )

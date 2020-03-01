@@ -8,11 +8,11 @@ class AuthClient {
     })
   }
 
-  getImages() {
-    return this.request({ method: "GET", url: '/api/images/'})
+  getImages(filter) {
+    return this.request({ method: "GET", url: `/api/${filter.activePage}/${filter.width}/${filter.height}/` })
       .then(response => {
         if(response.data.success) {
-          return response.data.images
+          return response.data
         }
       })
   }
