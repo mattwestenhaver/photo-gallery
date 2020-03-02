@@ -4,16 +4,35 @@ const
   logger = require('morgan'),
   cors = require('cors'),
   bodyParser = require('body-parser'),
+  mongoose = require('mongoose'),
   app = express(),
   request = require('request'),
   apiUrl = "https://pastebin.com/raw/BmA8B0tY",
   itemsPP = 9,
+  User = ('./models/User.js'),
+  usersRoutes = require('./routes/users.js'),
+  signToken = require('./serverAuth').signToken,
+  MONGODB_URI =  process.env.MONGODB_URI || 'mongodb://localhost/photo-gallery',
   PORT = process.env.PORT || 3001 
 ;
 
 app.use(cors())
 app.use(logger('dev'))
 app.use(bodyParser.json())
+
+mongoose.connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true
+}, (err) => {
+  console.log(err || `🤘🏾 Connected to Mongo @ ${MONGODB_URI}`)
+});
+
+app.get('/', (req, res) => {
+  res.json({message:'API root'})
+})
+
+app.use('/users', usersRoutes)
 
 app.get('/api/:page/:width/:height/', (req, res) => {
   request(apiUrl, (error, response, body) => {
