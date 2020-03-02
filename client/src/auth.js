@@ -25,12 +25,12 @@ class AuthClient {
   }
 
   signup(userInfo) {
-    return this.request({method: 'Post', url: "/users", data: userInfo})
+    return this.request({method: 'Post', url: "/api/users", data: userInfo})
       .then(response => response.data.success)
   }
 
   login(credentials) {
-    return this.request({method: 'POST', url: '/users/authenticate', data: credentials})
+    return this.request({method: 'POST', url: '/api/users/authenticate', data: credentials})
       .then((response) => {
         if(response.data.success) {
           const token = response.data.token

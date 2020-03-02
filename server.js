@@ -22,10 +22,7 @@ app.use(cors())
 app.use(logger('dev'))
 app.use(bodyParser.json())
 
-app.use(express.static(path.join(__dirname, "/client/build")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/client/build/index.html"));
-});
+app.use(express.static(path.join(__dirname, "client", "build")))
 
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
@@ -39,7 +36,7 @@ app.get('/', (req, res) => {
   res.json({message:'API root'})
 })
 
-app.use('/users', usersRoutes)
+app.use('/api/users', usersRoutes)
 
 app.get('/api/:page/:width/:height/', (req, res) => {
   request(apiUrl, (error, response, body) => {
@@ -51,6 +48,10 @@ app.get('/api/:page/:width/:height/', (req, res) => {
     res.json({ success: true, pages: Math.ceil(images.length / itemsPP), images: currentImages })
   })
 })
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
 app.listen(PORT, err => {
   console.log(err || `Server running on Port ${PORT}`)
