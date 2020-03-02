@@ -5,7 +5,39 @@
 }
 
 .logo {
+  margin: 15px;
   width: 100px;
+}
+
+.logout-container {
+  width: 95%;
+  margin-bottom: -20px;
+  text-align: right;
+}
+
+.logout-container h4 {
+  font-size: 1.2rem;
+  color: black;
+}
+
+.logout-container h4:hover {
+  text-decoration: underline;
+}
+
+.user-header {
+  margin-bottom: 15px;
+}
+
+.user-header h3 {
+  font-size: 1.5rem;
+}
+
+.submit-form {
+  width: 50%;
+  background-color: lightgray;
+  border-radius: 4px;
+  margin: 20px auto;
+  padding: 20px;
 }
 
 .options-button {

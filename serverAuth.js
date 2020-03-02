@@ -10,12 +10,12 @@ function signToken(user) {
 }
 
 function verifyToken(req, res, next) {
-  const token = req.get('token') || req.body.token || req.query.token;
-  if(!token) return res.json({success: false, message: "No token provided."})
+  const token = req.get('token') || req.body.token || req.query.token
+  if(!token) return res.json({ success: false, message: "No token provided." })
   jwt.verify(token, process.env.JWT_SECRET, (err, decodedData) => {
-    if(err) return res.json({success: false, message: "Invalid token."})
+    if(err) return res.json({ success: false, message: "Invalid Token." })
     User.findById(decodedData._id, (err, user) => {
-      if(!user) return res.json({success: false, message: "User not found"})
+      if(!user) return res.json({ success: false, message: "User not found." })
       req.user = user
       next()
     })

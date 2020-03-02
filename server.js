@@ -1,5 +1,5 @@
 const
-  dotenv = require('dotenv').load,
+  dotenv = require('dotenv').config(),
   express = require('express'),
   logger = require('morgan'),
   cors = require('cors'),
