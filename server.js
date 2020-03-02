@@ -18,7 +18,8 @@ app.use(bodyParser.json())
 app.get('/api/:page/:width/:height/', (req, res) => {
   request(apiUrl, (error, response, body) => {
     if(error) return res.json({ success: false, err: error })
-    var images = body.split("\r\n").filter(i => (i.split('/')[5] <= req.params.width && i.split('/')[6] <= req.params.height))
+    var images = body.split("\r\n").filter(i => (Number(i.split('/')[5]) <= req.params.width && Number(i.split('/')[6]) <= req.params.height))
+    console.log(images)
     var page = req.params.page
     var currentImages = images.slice((page - 1) * itemsPP, ((page - 1) * itemsPP) + itemsPP)
     res.json({ success: true, pages: Math.ceil(images.length / itemsPP), images: currentImages })

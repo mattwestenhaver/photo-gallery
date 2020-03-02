@@ -80,7 +80,7 @@ class Gallery extends React.Component {
         </div>
         {this.state.viewFilters
           ? <div className="options">
-              <Checkbox label={this.state.checked ? "Grayscale On" : "Grayscale Off"} toggle onClick={this.toggle} />
+              <Checkbox label={this.state.checked ? "Grayscale On" : "Grayscale Off"} checked={this.state.checked} toggle onClick={this.toggle} />
               <Form className="filtering">
                 <Form.Group inline >
                   <Form.Input
@@ -95,7 +95,7 @@ class Gallery extends React.Component {
                   />
                   <Form.Input
                     label={`Max. Height: ${height}`}
-                    min={100}
+                    min={50}
                     max={450}
                     name='height'
                     onChange={this.handleChange}
