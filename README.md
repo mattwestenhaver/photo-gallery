@@ -1,8 +1,6 @@
 # Photo Gallery App
 #### Created by Matthew Westenhaver
 
-#### You can view the deployed project [here](https://mw-photo-gallery.herokuapp.com/)
-
 ## About
 - This project was created using MERN Stack (MongoDB, Express.js, React.js, Node.js) and deployed on Heroku to keep the API and Client on the same URL. Express.js serves both the client files and processes the API requests.
 - To view the photo gallery, you must create an account and login.
